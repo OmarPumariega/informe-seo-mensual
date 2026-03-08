@@ -1,0 +1,61 @@
+{
+  "name": "Recepcionar Informe SEO Web",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "informe-seo",
+        "responseMode": "onReceived",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "name": "Webhook (Recibir Informe y Logo)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "informe-seo-webhook-1234",
+      "notesInFlow": true,
+      "notes": "Recibe FormData\\nPOST /informe-seo"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "e98e82a6-2182-4fdf-9767-f6bb2ea2d6f8",
+      "name": "Extract Metadata (Log & Debug)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        300
+      ],
+      "notes": "Muestra los archivos que han llegado con éxito"
+    }
+  ],
+  "connections": {
+    "Webhook (Recibir Informe y Logo)": {
+      "main": [
+        [
+          {
+            "node": "Extract Metadata (Log & Debug)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "f03bcee1-eaf2-40f4-bd2d-baff0f24976a"
+}
