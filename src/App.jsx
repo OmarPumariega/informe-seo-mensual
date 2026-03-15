@@ -3,17 +3,14 @@ import './App.css';
 
 function App() {
   const [reportFile, setReportFile] = useState(null);
-  const [logoFile, setLogoFile] = useState(null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const [isReportDragActive, setIsReportDragActive] = useState(false);
-  const [isLogoDragActive, setIsLogoDragActive] = useState(false);
 
   const reportInputRef = useRef(null);
-  const logoInputRef = useRef(null);
 
   // Drag and Drop Handlers for PDF Report
   const handleReportDragOver = (e) => {
@@ -47,40 +44,10 @@ function App() {
     }
   };
 
-  // Drag and Drop Handlers for Logo Image
-  const handleLogoDragOver = (e) => {
-    e.preventDefault();
-    setIsLogoDragActive(true);
-  };
 
-  const handleLogoDragLeave = (e) => {
-    e.preventDefault();
-    setIsLogoDragActive(false);
-  };
-
-  const handleLogoDrop = (e) => {
-    e.preventDefault();
-    setIsLogoDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const file = e.dataTransfer.files[0];
-      if (file.type.startsWith('image/')) {
-        setLogoFile(file);
-        setErrorMessage("");
-      } else {
-        alert('Por favor, sube un archivo de imagen válido.');
-      }
-    }
-  };
-
-  const handleLogoChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setLogoFile(e.target.files[0]);
-      setErrorMessage("");
-    }
-  };
 
   const handleSubmit = async () => {
-    if (!reportFile || !logoFile) return;
+    if (!reportFile) return;
 
     setIsLoading(true);
     setErrorMessage("");
@@ -89,7 +56,6 @@ function App() {
     try {
       const formData = new FormData();
       formData.append('report', reportFile);
-      formData.append('logo', logoFile);
 
       const webhookUrl = import.meta.env.VITE_N8N_WEBHOOK_URL || 'http://localhost:5678/webhook-test/informe-seo';
 
@@ -135,7 +101,6 @@ function App() {
               onClick={() => {
                 setIsSuccess(false);
                 setReportFile(null);
-                setLogoFile(null);
               }}
             >
               Enviar otro informe
@@ -152,13 +117,13 @@ function App() {
 
         <header className="page-header">
           <h1 className="page-title">Informe SEO Mensual</h1>
-          <p className="page-subtitle">Con este SaaS automatizamos la creación de informes SEO mensuales, subé el informe de tu herramienta SEO y el logotipo de marca.</p>
+          <p className="page-subtitle">Con este SaaS automatizamos la creación de informes SEO mensuales. Sube el informe PDF de tu herramienta SEO para generar el documento.</p>
         </header>
 
         <main className="card">
           <h2 className="card-title">Sube aquí tus archivos</h2>
 
-          <div className="grid-2">
+          <div style={{ maxWidth: '500px', margin: '0 auto' }}>
 
             {/* Upload Report Zone */}
             <div
@@ -184,35 +149,7 @@ function App() {
                 {reportFile ? reportFile.name : "Subir Informe PDF"}
               </p>
               {!reportFile && (
-                <p className="drop-zone-hint">Arrastra y suelta tu archivo aquí, o haz clic para seleccionar</p>
-              )}
-            </div>
-
-            {/* Upload Logo Zone */}
-            <div
-              className={`drop-zone ${isLogoDragActive ? 'active' : ''}`}
-              onDragOver={handleLogoDragOver}
-              onDragLeave={handleLogoDragLeave}
-              onDrop={handleLogoDrop}
-              onClick={() => logoInputRef.current.click()}
-            >
-              <input
-                type="file"
-                ref={logoInputRef}
-                onChange={handleLogoChange}
-                accept="image/*"
-                style={{ display: 'none' }}
-              />
-              <div className="drop-zone-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                </svg>
-              </div>
-              <p className="drop-zone-text">
-                {logoFile ? logoFile.name : "Subir Logotipo"}
-              </p>
-              {!logoFile && (
-                <p className="drop-zone-hint">Arrastra y suelta una imagen aquí, o haz clic para seleccionar</p>
+                <p className="drop-zone-hint">Arrastra y suelta tu archivo PDF aquí, o haz clic para seleccionar</p>
               )}
             </div>
 
@@ -227,7 +164,7 @@ function App() {
           <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
              <button 
                 className="btn-primary" 
-                disabled={!reportFile || !logoFile || isLoading}
+                disabled={!reportFile || isLoading}
                 onClick={handleSubmit}
                 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
              >

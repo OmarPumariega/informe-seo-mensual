@@ -10,7 +10,7 @@
           "rawBody": true
         }
       },
-      "name": "Webhook (Recibir Informe y Logo)",
+      "name": "Webhook (Recibir Informe)",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
       "position": [
